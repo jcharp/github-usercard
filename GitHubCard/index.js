@@ -5,13 +5,7 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-axios.get('https://api.github.com/users/jcharp')
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -36,7 +30,7 @@ axios.get('https://api.github.com/users/jcharp')
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["tetondan","dustinmyers","justsml","luishrd","bigknell"];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -57,6 +51,82 @@ const followersArray = [];
       </div>
     </div>
 */
+function person(obj) {
+  const card = document.createElement('div');
+  card.classList.add('card');
+
+  const imgP = document.createElement('img');
+  imgP.src = obj.data.avatar_url;
+
+  const cardInfo = document.createElement('div');
+  cardInfo.classList.add('card-info');
+
+  const name = document.createElement('h3');
+  name.classList.add('name');
+  name.innerText ="Name: " + obj.data.name;
+
+  const useName = document.createElement('p');
+  useName.classList.add('username');
+  useName.innerText = "User Name: " + obj.data.login;
+
+  const location = document.createElement('p');
+  location.innerText = "Location: " + obj.data.location;
+
+  const profile = document.createElement('p');
+  profile.innerText = "Profile: ";
+
+  const gitHubPage = document.createElement('a');
+  gitHubPage.innerHTML="github page: " + obj.data.url;
+
+  const followers = document.createElement('p')
+  followers.innerText = "Followers: " +obj.data.followers;
+
+  const following = document.createElement('p');
+  following.innerText = "Following: " +obj.data.following;
+
+  const bio = document.createElement('p');
+  bio.innerText = obj.data.bio;
+
+  card.appendChild(imgP);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(useName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(gitHubPage);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  return card;
+
+}
+
+axios.get('https://api.github.com/users/jcharp')
+  .then((res) => {
+    console.log(res);
+  
+    const cards = document.querySelector('.cards');
+
+    cards.appendChild(person(res));
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+
+  followersArray.forEach((el) => {
+    axios.get(`https://api.github.com/users/${el}`)
+    .then(res => {
+      const cards = document.querySelector('.cards');
+      cards.appendChild(person(res));
+    })
+    .catch((er) => {
+      console.log(err);
+    })
+
+  })
+  
+
 
 /*
   List of LS Instructors Github username's:
